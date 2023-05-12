@@ -6,6 +6,7 @@ import routeros_api
 # user: nombre de usuario previamente creado en el router con los permisos requeridos
 # pwd: contraseña del usuario
 # port: puerto API, este valor por lo general es 8728, el mismo que es habilitado previamente
+# El formato de los datos a ingresar son tipo String, a excepción del puerto API que puede ser ingresado como número entero
 def test_conexion(ip_host, user, pwd, port):
     try: # Estructura try para controlar el error si no se establece la conexión
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
