@@ -6,7 +6,7 @@ import routeros_api
 # user: nombre de usuario previamente creado en el router con los permisos requeridos
 # pwd: contraseña del usuario
 # port: puerto API, este valor por lo general es 8728, el mismo que es habilitado previamente
-# interfaz: interfaz del mikrotik por el que tiene salida a internet o WAN
+# interfaz: interfaz del mikrotik por el que tiene salida a internet o WAN (puede ser una interfaz o varias interfaces a modo de lista)
 def crear_reglas(ip_host, user, pwd, port, interfaz):
     try:
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
@@ -22,9 +22,10 @@ def crear_reglas(ip_host, user, pwd, port, interfaz):
         # CREACION DE NOMBRE DE LA LISTA DE INTERFACE CON SALIDA A WAN
         interface_name = api.get_resource("/interface/list")
         interface_name.add(name="Lista_WAN")
-        # CREACION DE UN MIEMBRO EN LA LISTA DE INTERFACE CON LA SALIDA A WAN
+        # CREACION DE UN MIEMBRO/MIEMBROS EN LA LISTA DE INTERFACE CON LA SALIDA A WAN
         interface_list = api.get_resource("/interface/list/member")
-        interface_list.add(list="Lista_WAN", interface=interfaz)
+        for i in interfaz:
+            interface_list.add(list="Lista_WAN", interface=i)
         # CREACION REGLAS DE NATEO PARA CORTES
         nat = api.get_resource("/ip/firewall/nat")
         nat.add(chain="dstnat", protocol="tcp", dst_port="!8291", in_interface_list="!Lista_WAN",
