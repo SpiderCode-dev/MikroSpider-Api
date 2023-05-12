@@ -7,6 +7,7 @@ import routeros_api
 # pwd: contraseña del usuario
 # port: puerto API, este valor por lo general es 8728, el mismo que es habilitado previamente
 # interfaz: interfaz del mikrotik por el que tiene salida a internet o WAN (puede ser una interfaz o varias interfaces a modo de lista)
+# El formato de los datos a ingresar son tipo String, a excepción del puerto API que puede ser ingresado como número entero
 def crear_reglas(ip_host, user, pwd, port, interfaz):
     try:
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
