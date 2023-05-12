@@ -1,0 +1,7 @@
+# Est es un primer script que permite la conexión mediante la habilitación del puerto api y la creación
+# de usuarios por el cual el sistema va a realizar el enlace con el router mikrotik.
+# Estas lineas de comando deben ejecutarse en el terminal del router mikrotik por el usuario.
+
+/ip service set api port=8728 disabled=no address="0.0.0.0/0";
+/user group remove [find where name ~"mikrospider"]; /user group add name=mikrospider policy="local, ftp, reboot, read, write, policy, test, password, sniff, api, romon, sensitive";
+/user remove [find where name ~"mikrospider"]; /user add name="mikrospiderfo7iuudtxhxrj2u" password="061ue40eghr1rewnectgsfkhr8sc2918176" group=mikrospider;
