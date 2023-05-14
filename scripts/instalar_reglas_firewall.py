@@ -12,10 +12,6 @@ def crear_reglas(ip_host, user, pwd, port, interfaz):
     try:
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
         api = connection.get_api()
-        # CREACION DE ADDRESSLIST PARA CLIENTES CON SERVICIO ACTIVO Y CORTADO
-        addresslist = api.get_resource("/ip/firewall/address-list")
-        addresslist.add(address="1.1.1.1", comment="IP NO VALIDA", list="ips_autorizadas_mikrospider")
-        addresslist.add(address="1.1.1.1", comment="IP NO VALIDA", list="ips_sin_servicio")
         # CREACION DE REGLA FIREWALL PARA PERMITIR TRAFICO DE CLIENTES ACTIVOS
         filter_rules = api.get_resource("/ip/firewall/filter")
         filter_rules.add(chain="FORWARD", action="accept", src_address_list="ips_autorizadas_mikrospider",
