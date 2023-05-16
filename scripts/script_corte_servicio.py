@@ -13,7 +13,7 @@ import routeros_api
 # El formato de los datos a ingresar son tipo String, a excepción del puerto API que puede ser ingresado como número entero
 # El resultado de esta función es una lista que contiene diccionarios que relacionan el id del item creado con el nombre, esto servira para
 # la activación del cliente ya que se debe eliminar el item del address-list con el id que nos arroja al momento de crearlo.
-def cortes_servicio(ip_host, user, pwd, port, nombre, ips_cortar):
+def cortes_servicio(ip_host, user, pwd, port, nombre, ips_cortar, dominios):
     try:
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
         api = connection.get_api()
@@ -24,11 +24,15 @@ def cortes_servicio(ip_host, user, pwd, port, nombre, ips_cortar):
             addresslist.add(address=ip, comment=nombre[i], list="ips_sin_servicio")
             info = addresslist.get(comment=nombre[i])  # Obtiene toda la informacion del item creado
             item = info[0]  # Se guarda la información esencial
-            id = {item['id']: nombre[i]}  # Obtenemos el id del item creado en el address-list y lo relacionamos con el nombre del cliente en forma de diccionario
+            proxy = api.get_resource("ip/proxy/access") # se crea el cliente en el proxy para redirirlo a una pagina de información
+            proxy.add(action="deny", comment=nombre[i]+"-Moroso", local_port="999", src_address=ip, redirect_to=dominios[i])
+            info2 = proxy.get(comment=nombre[i]+"-Moroso") # Obtiene la informacion del item proxy creado
+            item2 = info2[0]
+            id2 = item2['id']
+            id = {item['id']: nombre[i], "id_proxy": id2}  # Obtenemos el id del item creado en el address-list y el proxy y lo relacionamos con el nombre del cliente en forma de diccionario
             ids.append(id)  # Añadimos cada diccionario en una lista
             i = i + 1 # Acumulador que sirve como indexación en la lista de nombres
         return ids
     except routeros_api.exceptions.RouterOsApiConnectionError:
         status = "No se ha podido realizar el o los cortes debido a un error de conexión."
         return status
-
