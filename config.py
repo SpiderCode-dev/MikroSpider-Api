@@ -8,8 +8,6 @@ app = FastAPI()
 
 
 ''' DATABASE CONNECTION '''
-
-# OJO: TENER CUIDADO CON ESTA INFORMACION
 DATABASE_URL = "postgresql://spider:y46zp12x05s10m2ueui2@134.209.73.129:5432/mikro"
 database = databases.Database(DATABASE_URL)
 metadata = sqlalchemy.MetaData()

@@ -3,6 +3,8 @@ from pydantic import BaseModel
 
 
 ''' Model Schema Using Pydantic '''
+
+
 class Post(BaseModel):
     id: int
     title: str

@@ -14,5 +14,3 @@ posts = sqlalchemy.Table(
     sqlalchemy.Column("created", sqlalchemy.DateTime, default=datetime.utcnow().strftime("%Y-%m-%d" "%H:%M:%S")),
     sqlalchemy.Column("modified", sqlalchemy.DateTime, default=datetime.utcnow().strftime("%Y-%m-%d" "%H:%M:%S"))
 )
-
-

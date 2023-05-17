@@ -12,6 +12,7 @@ def test_conexion(ip_host, user, pwd, port):
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
         api = connection.get_api()
         status = "La conexión via api se ha realizado exitosamente."
+        return True
     except routeros_api.exceptions.RouterOsApiConnectionError:
         status = "No se ha logrado conectar via api, revisar la información ingresada por favor."
     return status
