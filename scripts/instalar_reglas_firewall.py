@@ -12,6 +12,9 @@ def crear_reglas(ip_host, user, pwd, port, interfaz):
     try:
         connection = routeros_api.RouterOsApiPool(ip_host, username=user, password=pwd, port=port, plaintext_login=True)
         api = connection.get_api()
+        nat = api.get_resource("/ip/firewall/nat")
+        # HABILITAR NAT PARA CREAR LAS REGLAS DE BLOQUEO
+        nat.add(action="accept", chain="srcnat", comment="NAT ALL")
         # CREACION DE NOMBRE DE LA LISTA DE INTERFACE CON SALIDA A WAN
         interface_name = api.get_resource("/interface/list")
         interface_name.add(name="Lista_WAN")
@@ -26,11 +29,20 @@ def crear_reglas(ip_host, user, pwd, port, interfaz):
         for i in interfaz:
             interface_list.add(list="Lista_WAN", interface=i)
         # CREACION REGLAS DE NATEO PARA CORTES
-        nat = api.get_resource("/ip/firewall/nat")
         nat.add(chain="dstnat", protocol="tcp", dst_port="!8291", in_interface_list="!Lista_WAN",
                 src_address_list="ips_sin_servicio", action="redirect", to_ports="999", comment="Mikrospider - Suspension de clientes (TCP)")
         nat.add(chain="dstnat", protocol="udp", dst_port="!8291,53", in_interface_list="!Lista_WAN",
                 src_address_list="ips_sin_servicio", action="redirect", to_ports="999", comment="Mikrospider - Suspension de clientes (UDP)")
+        nat.add(action="accept", chain="dstnat", comment="Mikrospider - Permitir pagina web morosos",
+                dst_address_list="servers_mikrospider", src_address_list="ips_sin_servicio")
+        nat.add(action="accept", chain="dstnat", comment="Mikrospider - Permitir pagina web avisos",
+                dst_address_list="servers_mikrospider", src_address_list="Aviso")
+        nat.add(chain="dstnat", protocol="tcp", dst_port="!8291", in_interface_list="!Lista_WAN",
+                src_address_list="Aviso", action="redirect", to_ports="999",
+                comment="Mikrospider - Aviso de Pago en Pantalla de clientes(TCP)")
+        nat.add(chain="dstnat", protocol="udp", dst_port="!8291,53", in_interface_list="!Lista_WAN",
+                src_address_list="Aviso", action="redirect", to_ports="999",
+                comment="Mikrospider - Aviso de Pago en Pantalla de clientes(UDP)")
         # HABILITAR EL WEB PROXY
         proxy = api.get_resource("/ip/proxy")
         proxy.set(enabled="yes", max_fresh_time="10s", port="999")
