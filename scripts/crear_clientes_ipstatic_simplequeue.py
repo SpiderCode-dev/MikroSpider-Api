@@ -17,8 +17,34 @@ def crearclientes_ipstatic_simplequeue(ip_host, user, pwd, port, nombres, ips, p
         address_list = api.get_resource("/ip/firewall/address-list")
         queuesimple = api.get_resource("/queue/simple")
         i = 0
+        lista_ids = []
         for ip in ips:
-            address_list.add(address=ip, comment=nombres[i], list="ips_autorizadas_mikrospider")
-            queuesimple.add(burst_limit=bl)
+            address_list.add(address=ip, comment=nombres[i], list="ips_autorizadas_mikrospider") #Agrega el cliente en el address_list
+            # Se calcula parámetros de la cola simple
+            bl = str(plan[i]+5) + "M"
+            bth = str(round(plan[i]/2)) + "M"
+            bti = "16s"
+            lat = str(round(plan[i]/2)-1) + "M"
+            mli = str(plan[i]) + "M"
+            # Se crea la cola simple
+            queuesimple.add(burst_limit=bl+"/"+bl, burst_threshold=bth+"/"+bth, burst_time=bti+"/"+bti,
+                            limit_at=lat + "/" + lat, max_limit=mli+"/"+mli, name=nombres[i], target=ip+"/32")
+            # Se obtiene la información (id) de los items creados en el mikrptik
+            info_addlist = address_list.get(comment=nombres[i])
+            info_queue = queuesimple.get(name=nombres[i])
+            item1 = info_addlist[0]
+            item2 = info_queue[0]
+            id_addlist = item1['id']
+            id_queue = item2['id']
+            # Se crea un diccionario con los ids correspondientes y se va añadiendo a una lista la cual será resultado de la función
+            ids = {"id_address_list": id_addlist, "id_queue_simple": id_queue}
+            lista_ids.append(ids)
+        if len(lista_ids) == 1:
+            status = "Cliente activado exitosamente"
+            return status, lista_ids
+        else:
+            status = "Clientes activados exitosamente"
+            return status, lista_ids
     except routeros_api.exceptions.RouterOsApiConnectionError:
-        status = "No se ha logrado conectar via api, revisar la información ingresada por favor."
+        status = "No se ha podido realizar el o los cortes debido a un error de conexión."
+        return status
