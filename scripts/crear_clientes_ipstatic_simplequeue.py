@@ -8,7 +8,7 @@ import routeros_api
 # nombres = Lista del o los clientes a añadir
 # ips = lista de ips de cada cliente (la información debe ser simétrica en cuanto al orden de en los que se ubican los nombreS)
 # plan = velocidad del plan del cliente (Por ejemplo: 45M, 65M etc...)
-# El formato de los datos a ingresar son tipo String, a excepción del puerto API que puede ser ingresado como número entero
+# El formato de los datos a ingresar son tipo String, a excepción del puerto API que puede ser ingresado como número entero y de los planes
 # La función devolvera una lista con el id del item creado en el address-list y el id del item creado en la cola
 def crearclientes_ipstatic_simplequeue(ip_host, user, pwd, port, nombres, ips, plan):
     try: # Estructura try para controlar el error si no se establece la conexión
