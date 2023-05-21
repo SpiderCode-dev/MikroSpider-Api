@@ -31,6 +31,7 @@ def crearclientes_ipstatic_reuso(ip_host, user, pwd, port, nombres, ips, plan):
                 ips = ITEM['target'].split(sep=",")
                 if len(ips) < 3:
                     cola_parent = Name
+                    break
             # Se crea la cola simple con reuso
             cola.add(limit_at=lat + "/" + lat, max_limit=mli+"/"+mli, name=nombres[i], target=ip+"/32",
                      queue="pcq-upload-default/pcq-download-default", parent=cola_parent)
