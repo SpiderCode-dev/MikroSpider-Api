@@ -39,6 +39,7 @@ def crearclientes_ipstatic_simplequeue(ip_host, user, pwd, port, nombres, ips, p
             # Se crea un diccionario con los ids correspondientes y se va añadiendo a una lista la cual será resultado de la función
             ids = {"id_address_list": id_addlist, "id_queue_simple": id_queue}
             lista_ids.append(ids)
+            i = i + 1
         if len(lista_ids) == 1:
             status = "Cliente activado exitosamente"
             return status, lista_ids
