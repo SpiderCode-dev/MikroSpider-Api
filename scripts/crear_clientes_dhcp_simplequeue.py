@@ -1,6 +1,6 @@
 import routeros_api
 
-##FUNCION PARA REALIZAR CONFIGURACIONES ADICIONALES AL MIKROTIK
+##FUNCION PARA CREAR CLIENTES CON DHCP, AMARRE  IP/MAC Y COLA SIMPLE
 # ip_host: Es la ip pública del router mikrotik
 # user: nombre de usuario previamente creado en el router con los permisos requeridos
 # pwd: contraseña del usuario
