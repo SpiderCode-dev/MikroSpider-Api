@@ -1,3 +1,5 @@
+import random
+
 import routeros_api
 
 ##FUNCION PARA CREAR CLIENTES CON AMARRE DE IP MAC SIN DHCP Y PLAN DE REUSO
@@ -22,21 +24,50 @@ def crearclientes_amarreipmac_reuso(ip_host, user, pwd, port, nombres, ips, maca
         i = 0
         lista_ids = []
         for ip in ips:
-            # Se calcula parámetros de la cola simple
-            lat = str(plan[i]) + "M"
-            mli = str(plan[i]) + "M"
-            # Obtengo el parent disponible
-            for j in range(10000):
-                Name = "PLAN_REUSO_" + str(plan[i]) + "_" + str(j + 1) + "_MIKROSPIDER"
-                info_cola = cola.get(name=Name)
-                ITEM = info_cola[0]
-                ips = ITEM['target'].split(sep=",")
-                if len(ips) < 3:
-                    cola_parent = Name
-                    break
-            # Se crea la cola simple con reuso
-            cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres[i], target=ip + "/32",
-                     queue="pcq-upload-default/pcq-download-default", parent=cola_parent)
+            num_cola = cola.get()
+            if len(num_cola) == 0:
+                lat = str(plan) + "M"
+                mli = str(plan) + "M"
+                id_cola_padre = str(random.randint(1, 999999))
+                cola.add(comment="Plan: PLUS_REHUSO_1 - Router: PRUEBA", limit_at=lat + "/" + lat,
+                         max_limit=mli + "/" + mli,
+                         name="Plan_" + id_cola_padre + "_Mikrospider", queue="pcq-upload-default/pcq-download-default",
+                         target=ip + "/32")  # Cola padre
+                cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres, target=ip + "/32",
+                         queue="pcq-upload-default/pcq-download-default",
+                         parent="Plan_" + id_cola_padre + "_Mikrospider")
+            else:
+                for j in range(len(num_cola)):
+                    info_cola = cola.get(comment="Plan: PLUS_REHUSO_" + str(j + 1) + " - Router: PRUEBA")
+                    if len(info_cola) != 0:
+                        item = info_cola[0]
+                        id_parent = item['id']
+                        nombre_padre = item['name']
+                        target = item['target']
+                        if len(target.split(sep=",")) < 3:
+                            plan_parent = nombre_padre
+                            ips = target + "," + ip + "/32"
+                            lat = str(plan) + "M"
+                            mli = str(plan) + "M"
+                            cola.set(id=id_parent, target=ips)  # Edit cola padre
+                            cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres,
+                                     target=ip + "/32",
+                                     queue="pcq-upload-default/pcq-download-default", parent=plan_parent)
+                            break
+                    else:
+                        lat = str(plan) + "M"
+                        mli = str(plan) + "M"
+                        id_cola_padre = str(random.randint(1, 999999))
+                        cola.add(comment="Plan: PLUS_REHUSO_" + str(j + 1) + " - Router: PRUEBA",
+                                 limit_at=lat + "/" + lat,
+                                 max_limit=mli + "/" + mli,
+                                 name="Plan_" + id_cola_padre + "_Mikrospider",
+                                 queue="pcq-upload-default/pcq-download-default",
+                                 target=ip + "/32")  # Cola padre
+                        cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres, target=ip + "/32",
+                                 queue="pcq-upload-default/pcq-download-default",
+                                 parent="Plan_" + id_cola_padre + "_Mikrospider")
+                        break
             address_list.add(address=ip, comment=nombres[i], list="ips_autorizadas_mikrospider")  # Agrega el cliente en el address_list
             infoarp = arp.get(mac_address=macaddress[i])
             lista_infoarp = infoarp[0]
