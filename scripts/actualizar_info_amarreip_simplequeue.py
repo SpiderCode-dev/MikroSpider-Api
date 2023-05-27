@@ -55,19 +55,20 @@ def actualizar_info_amarreip_queuesimple(ip_host, user, pwd, port, nombres, ips,
             ipfr = lista_infoarp2['address'] # Obtiene la ip desde el router
             if ip == ipfr and macaddress[i] == macfr: # Controla que la información ingresada coincida con la del router
                 arp.add(address=ip, comment=nombres[i], interface=interfaz[i], mac_address=macaddress[i])  # Agrega el cliente en el arp
+                # Se obtiene la información (id) de los items creados en el mikrptik
+                info_addlist = address_list.get(comment=nombres[i])
+                info_queue = queuesimple.get(name=nombres[i])
+                item1 = info_addlist[0]
+                item2 = info_queue[0]
+                id_addlist = item1['id']
+                id_queue = item2['id']
+                # Se crea un diccionario con los ids correspondientes y se va añadiendo a una lista la cual será resultado de la función
+                ids = {"id_address_list": id_addlist, "id_queue_simple": id_queue}
+                lista_ids.append(ids)
                 mensaje = "Información IP/MAC ingresada correctamente"
             else:
                 mensaje = "La dirección IP o MAC no coinciden con lo existente en el router"
-            # Se obtiene la información (id) de los items creados en el mikrptik
-            info_addlist = address_list.get(comment=nombres[i])
-            info_queue = queuesimple.get(name=nombres[i])
-            item1 = info_addlist[0]
-            item2 = info_queue[0]
-            id_addlist = item1['id']
-            id_queue = item2['id']
-            # Se crea un diccionario con los ids correspondientes y se va añadiendo a una lista la cual será resultado de la función
-            ids = {"id_address_list": id_addlist, "id_queue_simple": id_queue}
-            lista_ids.append(ids)
+                break
             i = i + 1
         if len(lista_ids) == 1:
             status = "Cliente activado exitosamente"
