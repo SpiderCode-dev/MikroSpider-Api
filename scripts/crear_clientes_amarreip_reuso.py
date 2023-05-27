@@ -26,14 +26,14 @@ def crearclientes_amarreipmac_reuso(ip_host, user, pwd, port, nombres, ips, maca
         for ip in ips:
             num_cola = cola.get()
             if len(num_cola) == 0:
-                lat = str(plan) + "M"
-                mli = str(plan) + "M"
+                lat = str(plan[i]) + "M"
+                mli = str(plan[i]) + "M"
                 id_cola_padre = str(random.randint(1, 999999))
                 cola.add(comment="Plan: PLUS_REHUSO_1 - Router: PRUEBA", limit_at=lat + "/" + lat,
                          max_limit=mli + "/" + mli,
                          name="Plan_" + id_cola_padre + "_Mikrospider", queue="pcq-upload-default/pcq-download-default",
                          target=ip + "/32")  # Cola padre
-                cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres, target=ip + "/32",
+                cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres[i], target=ip + "/32",
                          queue="pcq-upload-default/pcq-download-default",
                          parent="Plan_" + id_cola_padre + "_Mikrospider")
             else:
@@ -46,17 +46,17 @@ def crearclientes_amarreipmac_reuso(ip_host, user, pwd, port, nombres, ips, maca
                         target = item['target']
                         if len(target.split(sep=",")) < 3:
                             plan_parent = nombre_padre
-                            ips = target + "," + ip + "/32"
-                            lat = str(plan) + "M"
-                            mli = str(plan) + "M"
-                            cola.set(id=id_parent, target=ips)  # Edit cola padre
-                            cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres,
+                            ips_n = target + "," + ip + "/32"
+                            lat = str(plan[i]) + "M"
+                            mli = str(plan[i]) + "M"
+                            cola.set(id=id_parent, target=ips_n)  # Edit cola padre
+                            cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres[i],
                                      target=ip + "/32",
                                      queue="pcq-upload-default/pcq-download-default", parent=plan_parent)
                             break
                     else:
-                        lat = str(plan) + "M"
-                        mli = str(plan) + "M"
+                        lat = str(plan[i]) + "M"
+                        mli = str(plan[i]) + "M"
                         id_cola_padre = str(random.randint(1, 999999))
                         cola.add(comment="Plan: PLUS_REHUSO_" + str(j + 1) + " - Router: PRUEBA",
                                  limit_at=lat + "/" + lat,
@@ -64,7 +64,7 @@ def crearclientes_amarreipmac_reuso(ip_host, user, pwd, port, nombres, ips, maca
                                  name="Plan_" + id_cola_padre + "_Mikrospider",
                                  queue="pcq-upload-default/pcq-download-default",
                                  target=ip + "/32")  # Cola padre
-                        cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres, target=ip + "/32",
+                        cola.add(limit_at=lat + "/" + lat, max_limit=mli + "/" + mli, name=nombres[i], target=ip + "/32",
                                  queue="pcq-upload-default/pcq-download-default",
                                  parent="Plan_" + id_cola_padre + "_Mikrospider")
                         break
