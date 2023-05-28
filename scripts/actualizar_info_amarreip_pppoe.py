@@ -1,6 +1,6 @@
 import routeros_api
 
-##FUNCION PARA ACTUALIZAR INFO DE CLIENTES IP DINAMICA PPPoE + QUEUE ESTÁTICAS + ARP MARK STATIC
+##FUNCION PARA ACTUALIZAR INFO DE CLIENTES IP ESTÁTICA PPPoE + QUEUE ESTÁTICAS + ARP MARK STATIC
 # ip_host: Es la ip pública del router mikrotik
 # user: nombre de usuario previamente creado en el router con los permisos requeridos
 # pwd: contraseña del usuario
