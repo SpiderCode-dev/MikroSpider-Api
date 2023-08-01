@@ -1,3 +1,5 @@
 fastapi
 uvicorn[standard]
 routeros_api
+pyjwt
+sqlalchemy

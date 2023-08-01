@@ -3,10 +3,9 @@ from config import metadata
 from config import app
 import uvicorn
 
-from routers.post.route import post_route
-from routers.mikrotik.route import mikrotik
 
-app.include_router(post_route, prefix="/api/post", tags=["post"])
+from routers.mikrotik import mikrotik
+
 app.include_router(mikrotik, prefix="/api/mikrotik", tags=["mikrotik"])
 
 @app.get("/")
