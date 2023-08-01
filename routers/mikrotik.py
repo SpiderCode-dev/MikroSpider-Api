@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from fastapi import HTTPException
 
-from .model import Mikrotik
+from models.mikrotik import Mikrotik
 from scripts.conexion_api_mikrotik import *
 
 mikrotik = APIRouter()

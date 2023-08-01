@@ -1,10 +1,12 @@
-from config import engine
-from config import metadata
-from config import app
-import uvicorn
-
-
+from fastapi import FastAPI
+from config.database import engine
 from routers.mikrotik import mikrotik
+
+
+''' FastAPI CONFIGURATION '''
+app = FastAPI()
+
+
 
 app.include_router(mikrotik, prefix="/api/mikrotik", tags=["mikrotik"])
 
@@ -13,6 +15,12 @@ def home():
     return {"message": "Welcome to SpiderMikrotik API"}
 
 
-if __name__ == '__main__':
-    metadata.create_all(engine)
-    uvicorn.run("main:app", host="127.0.0.1", port=8080)
+# ''' APP EVENT SETTING'''
+# @app.on_event("startup")
+# async def startup():
+#     await engine.connect()
+
+
+# @app.on_event("shutdown")
+# async def shutdown():
+#     await engine.disconnect()
