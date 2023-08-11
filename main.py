@@ -2,12 +2,7 @@ from fastapi import FastAPI
 from config.database import engine
 from routers.mikrotik import mikrotik
 
-
-''' FastAPI CONFIGURATION '''
 app = FastAPI()
-
-
-
 app.include_router(mikrotik, prefix="/api/mikrotik", tags=["mikrotik"])
 
 @app.get("/")

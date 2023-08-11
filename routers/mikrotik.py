@@ -6,7 +6,6 @@ from scripts.conexion_api_mikrotik import *
 
 mikrotik = APIRouter()
 
-
 @mikrotik.post("/test", status_code=201)
 async def test(router: Mikrotik):
   status = test_conexion(router.ip, router.user, router.password, router.port)
