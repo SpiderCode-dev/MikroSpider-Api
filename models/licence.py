@@ -1,16 +1,17 @@
 from config.database import Base
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from pydantic import BaseModel, Field
+from sqlalchemy.orm import Mapped, mapped_column
+
 class LicenceModel(Base):
     __tablename__ = "licencia"
-    id: Column(Integer, primary_key=True, increment=True)
-    user_id: Column(Integer)
-    plan: Column(String)
-    domain: Column(String)
-    valid: Column(Boolean)
-    created_at: Column(DateTime)
-    end_at: Column(DateTime)
-
+    id: Mapped[int]= mapped_column(Integer, primary_key=True, index=True)
+    user_id: Mapped[int]= mapped_column(Integer)
+    plan: Mapped[str]= mapped_column(String)
+    domain: Mapped[str]= mapped_column(String)
+    valid: Mapped[bool]= mapped_column(Boolean)
+    created_at: Mapped[str]= mapped_column(DateTime)
+    end_at: Mapped[str]= mapped_column(DateTime)
 
 class Licence(BaseModel):
     id: int
