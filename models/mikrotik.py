@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 class MikrotikModel(Base):
     __tablename__ = "mikrotik"
-    id: Mapped[int]= mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int]= mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
     ip: Mapped[str] = mapped_column(String, nullable=False)
     user: Mapped[str] = mapped_column(String, nullable=False)
     password: Mapped[str] = mapped_column(String, nullable=False)

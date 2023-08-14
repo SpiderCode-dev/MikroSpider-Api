@@ -5,13 +5,13 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 class LicenceModel(Base):
     __tablename__ = "licencia"
-    id: Mapped[int]= mapped_column(Integer, primary_key=True, index=True)
+    id: Mapped[int]= mapped_column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id: Mapped[int]= mapped_column(Integer)
     plan: Mapped[str]= mapped_column(String)
     domain: Mapped[str]= mapped_column(String)
     valid: Mapped[bool]= mapped_column(Boolean)
-    created_at: Mapped[str]= mapped_column(DateTime)
-    end_at: Mapped[str]= mapped_column(DateTime)
+    created_at: Mapped[str]= mapped_column(String)
+    end_at: Mapped[str]= mapped_column(String)
 
 class Licence(BaseModel):
     id: int

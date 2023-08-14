@@ -7,22 +7,22 @@ from config.database import Session
 from middlewares.jwt_bearer import JWTBearer
 from services.user import UserService
 
-user = APIRouter()
+user_router = APIRouter()
 
-@user.post("/login", tags=['auth'])
+@user_router.post("/login")
 def login(user: Credentials):
     db = Session()
     result = UserService(db).get_user(user.email)
     if (result is None):
         raise HTTPException(status_code=404, detail="El usuario no existe")
     
-    if (result.password != UserService.hash_password(user.password)):
+    if (result.password != user.password):
         raise HTTPException(status_code=403, detail="Credenciales son invalidas")
     
     token: str = create_token(user.dict())
     return JSONResponse(status_code=200, content=token)
   
 
-@user.post("/register", tags=['auth'], response_model=User, status_code=200, dependencies=[Depends(JWTBearer())])
+@user_router.post("/register", response_model=User, status_code=200, dependencies=[Depends(JWTBearer())])
 def register(user: Credentials):
-    
+    return JSONResponse(status_code=200, content='hello')
