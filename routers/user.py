@@ -25,4 +25,12 @@ def login(user: Credentials):
 
 @user_router.post("/register", response_model=User, status_code=200, dependencies=[Depends(JWTBearer())])
 def register(user: Credentials):
-    return JSONResponse(status_code=200, content='hello')
+    db = Session()
+    exist = UserService(db).get_user(user.email)
+    if exist is not None:
+        raise HTTPException(status_code=400, detail="El usuario ya existe")
+    result = UserService(db).create_user(user)
+    if (result is None):
+        raise HTTPException(status_code=400, detail="No se pudo crear el usuario")
+    
+    return JSONResponse(status_code=200, content=result)

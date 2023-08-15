@@ -2,6 +2,7 @@ from config.database import Base
 from sqlalchemy import Column, Integer, String, DateTime
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Mapped, mapped_column
+from typing import Optional
 
 
 class UserModel(Base):
@@ -15,13 +16,13 @@ class UserModel(Base):
     token_expires: Mapped[str]= mapped_column(String)
 
 class User(BaseModel):
-    id: int
+    id: Optional[int] = None
     role: int
     email: str
     password: str
-    created_at: str
-    token: str
-    token_expires: str
+    created_at: Optional[str] = None
+    token: Optional[str] = None
+    token_expires: Optional[str] = None
 
 class Credentials(BaseModel):
     email: str
